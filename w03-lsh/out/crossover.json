@@ -1,0 +1,141 @@
+{
+  "runs": [
+    {
+      "n": 125,
+      "actual_docs": 125,
+      "threshold": 0.6,
+      "brute_s": 0.05100400000810623,
+      "brute_calls": 7750,
+      "brute_peak_bytes": 7912,
+      "lsh_s": 1.1828244000207633,
+      "lsh_calls": 8,
+      "lsh_peak_bytes": 1535728
+    },
+    {
+      "n": 250,
+      "actual_docs": 250,
+      "threshold": 0.6,
+      "brute_s": 0.3212215000530705,
+      "brute_calls": 31125,
+      "brute_peak_bytes": 7912,
+      "lsh_s": 2.5907355999806896,
+      "lsh_calls": 15,
+      "lsh_peak_bytes": 2271896
+    },
+    {
+      "n": 500,
+      "actual_docs": 500,
+      "threshold": 0.6,
+      "brute_s": 1.3722245000535622,
+      "brute_calls": 124750,
+      "brute_peak_bytes": 10376,
+      "lsh_s": 3.260219799936749,
+      "lsh_calls": 31,
+      "lsh_peak_bytes": 3485088
+    },
+    {
+      "n": 1000,
+      "actual_docs": 1000,
+      "threshold": 0.6,
+      "brute_s": 6.87168229999952,
+      "brute_calls": 499500,
+      "brute_peak_bytes": 12488,
+      "lsh_s": 4.341379899997264,
+      "lsh_calls": 57,
+      "lsh_peak_bytes": 5658344
+    },
+    {
+      "n": 2000,
+      "actual_docs": 2000,
+      "threshold": 0.6,
+      "brute_s": 27.61884230002761,
+      "brute_calls": 1999000,
+      "brute_peak_bytes": 21704,
+      "lsh_s": 5.887693299911916,
+      "lsh_calls": 119,
+      "lsh_peak_bytes": 9657716
+    },
+    {
+      "n": 4000,
+      "actual_docs": 4000,
+      "threshold": 0.6,
+      "brute_s": 117.05649250000715,
+      "brute_calls": 7998000,
+      "brute_peak_bytes": 29352,
+      "lsh_s": 9.216728600091301,
+      "lsh_calls": 239,
+      "lsh_peak_bytes": 17479500
+    },
+    {
+      "n": 1000,
+      "actual_docs": 1000,
+      "threshold": 0.6,
+      "brute_s": 5.296225399943069,
+      "brute_calls": 499500,
+      "brute_peak_bytes": 14280,
+      "lsh_s": 3.7893928000703454,
+      "lsh_calls": 57,
+      "lsh_peak_bytes": 5675592
+    },
+    {
+      "n": 500,
+      "actual_docs": 500,
+      "threshold": 0.6,
+      "brute_s": 1.6849990000482649,
+      "brute_calls": 124750,
+      "brute_peak_bytes": 10376,
+      "lsh_s": 2.477925300016068,
+      "lsh_calls": 31,
+      "lsh_peak_bytes": 3484304
+    },
+    {
+      "n": 250,
+      "actual_docs": 250,
+      "threshold": 0.6,
+      "brute_s": 0.3101712000789121,
+      "brute_calls": 31125,
+      "brute_peak_bytes": 7912,
+      "lsh_s": 2.2461756000993773,
+      "lsh_calls": 15,
+      "lsh_peak_bytes": 2271504
+    },
+    {
+      "n": 125,
+      "actual_docs": 125,
+      "threshold": 0.6,
+      "brute_s": 0.08816509996540844,
+      "brute_calls": 7750,
+      "brute_peak_bytes": 7912,
+      "lsh_s": 1.732374299899675,
+      "lsh_calls": 8,
+      "lsh_peak_bytes": 1514912
+    },
+    {
+      "n": 750,
+      "actual_docs": 750,
+      "threshold": 0.6,
+      "brute_s": 4.582313399994746,
+      "brute_calls": 280875,
+      "brute_peak_bytes": 11336,
+      "lsh_s": 4.046273500076495,
+      "lsh_calls": 42,
+      "lsh_peak_bytes": 4617980
+    }
+  ],
+  "machine": {
+    "platform": "Windows-10-10.0.26200-SP0",
+    "processor": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "python": "3.11.8",
+    "cpu": "12th Gen Intel(R) Core(TM) i7-1260P",
+    "ram_bytes": 16787636224,
+    "background_apps": "Codex, Chrome and Edge were open; no other benchmark was run concurrently."
+  },
+  "method": {
+    "seed": 246,
+    "shingles": 60,
+    "vocabulary": 5000,
+    "num_hashes": 120,
+    "bands": 30,
+    "memory": "tracemalloc peak during find; input generation excluded"
+  }
+}

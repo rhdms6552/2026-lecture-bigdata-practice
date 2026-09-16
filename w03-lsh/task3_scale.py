@@ -18,6 +18,11 @@ comparisons is easy; skipping comparisons without losing the pairs is the task.
 """
 
 
+import random
+
+from task1_minhash import lsh_candidates, minhash_signatures
+
+
 class BruteForce:
     """Correct, and quadratic."""
 
@@ -60,8 +65,35 @@ class YourFinder:
     You may reuse your Task 1 code.
     """
 
-    def __init__(self, threshold):
-        raise NotImplementedError("write your finder")
+    def __init__(self, threshold, num_hashes=120, bands=30):
+        if num_hashes <= 0 or bands <= 0 or num_hashes % bands:
+            raise ValueError("hash count must be positive and divisible by bands")
+        self.threshold = threshold
+        self.num_hashes = num_hashes
+        self.bands = bands
+
+    def signatures(self, docs):
+        # Assign each distinct shingle a unique row; no dependence on pair
+        # labels or planted document positions. A fixed RNG makes runs repeatable.
+        row_ids = {}
+        columns = []
+        for doc in docs:
+            columns.append({row_ids.setdefault(x, len(row_ids)) for x in doc})
+        prime = (1 << 61) - 1
+        rng = random.Random(42)
+        coefficients = [(rng.randrange(1, prime), rng.randrange(prime))
+                        for _ in range(self.num_hashes)]
+        hashes = [lambda row, a=a, b=b: (a * row + b) % prime
+                  for a, b in coefficients]
+        return minhash_signatures(columns, hashes, len(row_ids))
 
     def find(self, docs, similarity):
-        raise NotImplementedError
+        # At threshold zero even disjoint/empty pairs qualify.
+        if self.threshold <= 0:
+            return BruteForce(self.threshold).find(docs, similarity)
+        signatures = self.signatures(docs)
+        # Empty sets have Jaccard zero and cannot qualify at a positive threshold.
+        active = [i for i, doc in enumerate(docs) if doc]
+        candidates = lsh_candidates([signatures[i] for i in active], self.bands)
+        return {(active[i], active[j]) for i, j in candidates
+                if similarity(docs[active[i]], docs[active[j]]) >= self.threshold}

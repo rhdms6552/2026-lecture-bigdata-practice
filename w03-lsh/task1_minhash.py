@@ -30,7 +30,8 @@ BOOK_HASHES = [lambda r: (r + 1) % 5, lambda r: (3 * r + 1) % 5]
 
 def jaccard(a, b):
     """|a and b| / |a or b|. Empty union is 0, not an error."""
-    raise NotImplementedError("jaccard similarity")
+    union = len(a | b)
+    return len(a & b) / union if union else 0.0
 
 
 def minhash_signatures(columns, hashes, n_rows):
@@ -48,7 +49,26 @@ def minhash_signatures(columns, hashes, n_rows):
     written something correct that does not survive a dataset that does not fit
     in memory, and not fitting in memory is what this course is about.
     """
-    raise NotImplementedError("signature matrix")
+    # Convert the supplied column sets to sparse row incidence lists. The
+    # signature update then consumes each row once, sharing its hash values.
+    rows = {}
+    for c, column in enumerate(columns):
+        for row in column:
+            if not 0 <= row < n_rows:
+                raise ValueError("row number outside the matrix")
+            rows.setdefault(row, []).append(c)
+    signatures = [[float("inf")] * len(hashes) for _ in columns]
+    for row in range(n_rows):
+        present = rows.pop(row, ())
+        if not present:
+            continue
+        values = [h(row) for h in hashes]
+        for c in present:
+            sig = signatures[c]
+            for k, value in enumerate(values):
+                if value < sig[k]:
+                    sig[k] = value
+    return signatures
 
 
 def lsh_candidates(signatures, bands):
@@ -60,7 +80,25 @@ def lsh_candidates(signatures, bands):
     The signature length must divide evenly by `bands`, or you have to decide
     what to do with the remainder. Say what you decided.
     """
-    raise NotImplementedError("LSH candidate pairs")
+    if not isinstance(bands, int) or bands <= 0:
+        raise ValueError("bands must be a positive integer")
+    if not signatures:
+        return set()
+    length = len(signatures[0])
+    if length == 0 or length % bands:
+        raise ValueError("signature length must be positive and divisible by bands")
+    if any(len(sig) != length for sig in signatures):
+        raise ValueError("all signatures must have the same length")
+    width = length // bands
+    candidates = set()
+    for start in range(0, length, width):
+        buckets = {}
+        for j, sig in enumerate(signatures):
+            key = tuple(sig[start:start + width])
+            bucket = buckets.setdefault(key, [])
+            candidates.update((i, j) for i in bucket)
+            bucket.append(j)
+    return candidates
 
 
 # ------------------------------------------------------------------- harness
