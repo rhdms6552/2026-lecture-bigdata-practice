@@ -1,0 +1,43 @@
+{
+  "captured_at": "2026-09-28T09:45:11.1316041+09:00",
+  "cpu": "12th Gen Intel(R) Core(TM) i7-1260P",
+  "os": {
+    "Caption": "Microsoft Windows 11 Home",
+    "TotalVisibleMemorySize": 16394176,
+    "FreePhysicalMemory": 2878804
+  },
+  "running": [
+    {
+      "ProcessName": "chrome",
+      "WorkingSetMB": 666.0
+    },
+    {
+      "ProcessName": "Memory Compression",
+      "WorkingSetMB": 651.0
+    },
+    {
+      "ProcessName": "chrome",
+      "WorkingSetMB": 631.0
+    },
+    {
+      "ProcessName": "ChatGPT",
+      "WorkingSetMB": 477.0
+    },
+    {
+      "ProcessName": "chrome",
+      "WorkingSetMB": 431.0
+    },
+    {
+      "ProcessName": "ChatGPT",
+      "WorkingSetMB": 415.0
+    },
+    {
+      "ProcessName": "chrome",
+      "WorkingSetMB": 405.0
+    },
+    {
+      "ProcessName": "MsMpEng",
+      "WorkingSetMB": 367.0
+    }
+  ]
+}

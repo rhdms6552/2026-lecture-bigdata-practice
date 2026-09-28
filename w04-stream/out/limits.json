@@ -1,0 +1,67 @@
+{
+  "runs": [
+    {
+      "n": 100000,
+      "true_distinct": 36702,
+      "exact_s": 0.4793255999975372,
+      "exact_peak_bytes": 4219244,
+      "fm_estimate": 37888.0,
+      "fm_s": 2.152706799999578,
+      "fm_peak_bytes": 8601,
+      "fm_ratio": 1.0323143152961691
+    },
+    {
+      "n": 400000,
+      "true_distinct": 146970,
+      "exact_s": 6.427066100004595,
+      "exact_peak_bytes": 12767092,
+      "fm_estimate": 212992.0,
+      "fm_s": 20.726312500002678,
+      "fm_peak_bytes": 8602,
+      "fm_ratio": 1.4492209294413827
+    },
+    {
+      "n": 1600000,
+      "true_distinct": 587625,
+      "exact_s": 28.269336099998327,
+      "exact_peak_bytes": 51348630,
+      "fm_estimate": 638976.0,
+      "fm_s": 110.94308810000075,
+      "fm_peak_bytes": 8602,
+      "fm_ratio": 1.0873873643905552
+    },
+    {
+      "n": 6400000,
+      "true_distinct": 2349909,
+      "exact_s": 109.17611270000634,
+      "exact_peak_bytes": 207086882,
+      "fm_estimate": 2293760.0,
+      "fm_s": 287.9168206000031,
+      "fm_peak_bytes": 8603,
+      "fm_ratio": 0.976105883249096
+    }
+  ],
+  "machine": {
+    "platform": "Windows-10-10.0.26200-SP0",
+    "processor": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "python": "3.11.8",
+    "cpu_model": "12th Gen Intel(R) Core(TM) i7-1260P",
+    "ram_bytes": 16787636224,
+    "available_ram_bytes_at_snapshot": 2947895296,
+    "snapshot_time": "2026-09-28T09:45:11.1316041+09:00",
+    "other_running_processes": [
+      "ChatGPT",
+      "Memory Compression",
+      "MsMpEng",
+      "chrome"
+    ],
+    "measurement_load_note": "A separate Codex task ran Python stream measurements concurrently for part of this experiment; wall times include that contention."
+  },
+  "stopping_reason": {
+    "n": 6400000,
+    "resource": "time",
+    "interactive_budget_seconds": 60,
+    "observed_exact_seconds": 109.17611270000634,
+    "note": "Completed, but exceeded one minute per exact pass. No out-of-memory failure observed."
+  }
+}

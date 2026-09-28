@@ -59,9 +59,16 @@ def main():
     except Exception:
         flajolet_martin = None
 
-    rows = []
+    path = os.path.join(OUT, "limits.json")
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as f:
+            prior = json.load(f)
+    else:
+        prior = {"runs": []}
+    prior["machine"] = machine()
     for n in [int(x) for x in a.sizes.split(",")]:
         true, t_exact, m_exact = exact_distinct(n)
+        print(f"  exact finished n={n:,}: {t_exact:.2f}s, {m_exact / 1e6:.2f} MB", flush=True)
         row = {"n": n, "true_distinct": true, "exact_s": t_exact,
                "exact_peak_bytes": m_exact}
 
@@ -79,19 +86,17 @@ def main():
             except NotImplementedError:
                 tracemalloc.stop()
 
-        rows.append(row)
+        # Keep completed measurements if a later, larger run is interrupted.
+        prior["runs"].append(row)
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(prior, f, indent=2)
         line = (f"  n={n:>10,}  distinct {true:>9,}   exact {t_exact:>7.2f}s "
                 f"{m_exact / 1e6:>8.1f} MB")
         if "fm_s" in row:
             line += (f"   |  fm {row['fm_s']:>7.2f}s {row['fm_peak_bytes'] / 1e6:>6.2f} MB"
                      f"  {row['fm_ratio']:.2f}x")
-        print(line)
+        print(line, flush=True)
 
-    path = os.path.join(OUT, "limits.json")
-    prior = json.load(open(path)) if os.path.exists(path) else {"runs": []}
-    prior["machine"] = machine()
-    prior["runs"].extend(rows)
-    json.dump(prior, open(path, "w"), indent=2)
     print(f"\n  -> out/limits.json  ({len(prior['runs'])} measurement(s))")
     print("  Keep raising --sizes until the exact version is unbearable. "
           "Record where, and what ran out.")

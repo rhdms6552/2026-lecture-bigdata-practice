@@ -13,7 +13,14 @@ approximating.
 
     python3 task1_sketches.py --verify
 """
-import argparse, random
+import argparse, hashlib, math, random, statistics, struct
+
+
+def hash_words(item, count, seed):
+    """Stable, seeded 64-bit hash outputs; never retain input items."""
+    data = str(seed).encode() + b"\0" + str(item).encode()
+    return struct.unpack("<" + "Q" * count,
+                         hashlib.shake_256(data).digest(8 * count))
 
 
 class BloomFilter:
@@ -28,13 +35,21 @@ class BloomFilter:
     """
 
     def __init__(self, m, k, seed=246):
-        raise NotImplementedError("write the Bloom filter")
+        if m <= 0 or k <= 0:
+            raise ValueError("m and k must be positive")
+        self.m, self.k, self.seed = m, k, seed
+        self.bits = bytearray((m + 7) // 8)
+
+    def _indices(self, item):
+        return (h % self.m for h in hash_words(item, self.k, self.seed))
 
     def add(self, item):
-        raise NotImplementedError
+        for i in self._indices(item):
+            self.bits[i // 8] |= 1 << (i % 8)
 
     def __contains__(self, item):
-        raise NotImplementedError
+        return all(self.bits[i // 8] & (1 << (i % 8))
+                   for i in self._indices(item))
 
     def expected_fp_rate(self, n_inserted):
         """The textbook's predicted false-positive rate after n insertions.
@@ -42,7 +57,46 @@ class BloomFilter:
         §4.4.2 derives it. Return the number, do not measure it - the harness
         measures separately and compares the two.
         """
-        raise NotImplementedError
+        if n_inserted < 0:
+            raise ValueError("n_inserted must be nonnegative")
+        return (-math.expm1(-self.k * n_inserted / self.m)) ** self.k
+
+
+def fm_registers(stream, n_hashes=64, seed=246):
+    """One maximum trailing-zero count per hash, plus empty-stream state."""
+    if n_hashes <= 0:
+        raise ValueError("n_hashes must be positive")
+    maxima = [-1] * n_hashes
+    prefix = str(seed).encode() + b"\0"
+    offsets = tuple(range(0, 8 * n_hashes, 8))
+    byte_zeros = tuple((b & -b).bit_length() - 1 if b else 8
+                       for b in range(256))
+    for item in stream:
+        digest = hashlib.shake_256(prefix + str(item).encode()).digest(8 * n_hashes)
+        for i, offset in enumerate(offsets):
+            zeros = byte_zeros[digest[offset]]
+            # Read additional bytes only when the low byte is all zeros.
+            # This is exactly the same 64-bit hash as hash_words(), with
+            # fewer temporary Python integers during memory profiling.
+            if zeros == 8:
+                for j in range(1, 8):
+                    extra = byte_zeros[digest[offset + j]]
+                    zeros += extra
+                    if extra < 8:
+                        break
+            if zeros > maxima[i]:
+                maxima[i] = zeros
+    return maxima
+
+
+def combine_fm(maxima):
+    """Average eight group medians to suppress extreme hash outliers."""
+    if maxima[0] < 0:
+        return 0.0
+    estimates = [float(2 ** r) for r in maxima]
+    groups = min(8, len(estimates))
+    return statistics.mean(statistics.median(estimates[g::groups])
+                           for g in range(groups))
 
 
 def flajolet_martin(stream, n_hashes=64, seed=246):
@@ -67,7 +121,7 @@ def flajolet_martin(stream, n_hashes=64, seed=246):
 
     Return your estimate as a float.
     """
-    raise NotImplementedError("write Flajolet-Martin")
+    return combine_fm(fm_registers(stream, n_hashes, seed))
 
 
 def reservoir_sample(stream, k, seed=246):
@@ -78,7 +132,20 @@ def reservoir_sample(stream, k, seed=246):
 
     Return a list of k items (or fewer if the stream was shorter).
     """
-    raise NotImplementedError("write reservoir sampling")
+    if k < 0:
+        raise ValueError("k must be nonnegative")
+    if k == 0:
+        return []
+    rng = random.Random(seed)
+    sample = []
+    for n, item in enumerate(stream, 1):
+        if n <= k:
+            sample.append(item)
+        else:
+            j = rng.randrange(n)
+            if j < k:
+                sample[j] = item
+    return sample
 
 
 # ------------------------------------------------------------------- harness

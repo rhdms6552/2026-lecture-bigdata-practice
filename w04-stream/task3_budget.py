@@ -18,6 +18,8 @@ better score by occasionally forgetting something it was given has not improved
 anything, it has broken the contract.
 """
 import hashlib
+import struct
+import sys
 
 
 class NaiveFilter:
@@ -64,14 +66,33 @@ class YourFilter:
     observation.md asks.
     """
 
+    __slots__ = ("bits", "key")
+    K = 7  # round((80_000 / 8_000) * ln(2))
+
     def __init__(self, n_bits, seed=246):
-        raise NotImplementedError("write your filter")
+        self.key = str(seed).encode()
+        # Include instance, key, and bytearray overhead in resident state.
+        # A nonempty bytearray also allocates one terminating byte.
+        overhead = sys.getsizeof(self) + sys.getsizeof(self.key)
+        overhead += sys.getsizeof(bytearray(1)) - 1
+        n_bytes = n_bits // 8 - overhead
+        if n_bytes <= 0:
+            raise ValueError("budget is too small for the filter metadata")
+        self.bits = bytearray(n_bytes)
+
+    def _indices(self, item):
+        digest = hashlib.shake_256(self.key + b"\0" + str(item).encode()).digest(8 * self.K)
+        m = len(self.bits) * 8
+        return (h % m for h in struct.unpack("<" + "Q" * self.K, digest))
 
     def add(self, item):
-        raise NotImplementedError
+        for i in self._indices(item):
+            self.bits[i // 8] |= 1 << (i % 8)
 
     def __contains__(self, item):
-        raise NotImplementedError
+        return all(self.bits[i // 8] & (1 << (i % 8))
+                   for i in self._indices(item))
 
     def memory_bits(self):
-        raise NotImplementedError
+        return 8 * (sys.getsizeof(self) + sys.getsizeof(self.key)
+                    + sys.getsizeof(self.bits))
