@@ -1,0 +1,134 @@
+{
+  "fm_trials": [
+    {
+      "seed": 246,
+      "true_distinct": 19953,
+      "estimates": {
+        "raw_mean": 46208.0,
+        "raw_median": 16384.0,
+        "median_of_group_means": 41216.0,
+        "mean_of_group_medians": 32256.0,
+        "median_of_group_geometric_means": 24196.319575072757
+      },
+      "ratios": {
+        "raw_mean": 2.315842229238711,
+        "raw_median": 0.8211296546885181,
+        "median_of_group_means": 2.065654287575803,
+        "mean_of_group_medians": 1.61659900766802,
+        "median_of_group_geometric_means": 1.212665743250276
+      }
+    },
+    {
+      "seed": 0,
+      "true_distinct": 19953,
+      "estimates": {
+        "raw_mean": 122368.0,
+        "raw_median": 32768.0,
+        "median_of_group_means": 114688.0,
+        "mean_of_group_medians": 26112.0,
+        "median_of_group_geometric_means": 26386.273598656582
+      },
+      "ratios": {
+        "raw_mean": 6.132812108454869,
+        "raw_median": 1.6422593093770361,
+        "median_of_group_means": 5.747907582819626,
+        "mean_of_group_medians": 1.3086753871598256,
+        "median_of_group_geometric_means": 1.322421370152688
+      }
+    },
+    {
+      "seed": 1,
+      "true_distinct": 19953,
+      "estimates": {
+        "raw_mean": 59872.0,
+        "raw_median": 16384.0,
+        "median_of_group_means": 45056.0,
+        "mean_of_group_medians": 24064.0,
+        "median_of_group_geometric_means": 22188.12288101405
+      },
+      "ratios": {
+        "raw_mean": 3.0006515310980806,
+        "raw_median": 0.8211296546885181,
+        "median_of_group_means": 2.2581065503934243,
+        "mean_of_group_medians": 1.2060341803237609,
+        "median_of_group_geometric_means": 1.1120193896163009
+      }
+    },
+    {
+      "seed": 2,
+      "true_distinct": 19953,
+      "estimates": {
+        "raw_mean": 37696.0,
+        "raw_median": 16384.0,
+        "median_of_group_means": 33024.0,
+        "mean_of_group_medians": 20480.0,
+        "median_of_group_geometric_means": 18657.912991853635
+      },
+      "ratios": {
+        "raw_mean": 1.8892397133263168,
+        "raw_median": 0.8211296546885181,
+        "median_of_group_means": 1.655089460231544,
+        "mean_of_group_medians": 1.0264120683606475,
+        "median_of_group_geometric_means": 0.935093118420971
+      }
+    },
+    {
+      "seed": 3,
+      "true_distinct": 19953,
+      "estimates": {
+        "raw_mean": 137600.0,
+        "raw_median": 32768.0,
+        "median_of_group_means": 57344.0,
+        "mean_of_group_medians": 24064.0,
+        "median_of_group_geometric_means": 35733.757383975164
+      },
+      "ratios": {
+        "raw_mean": 6.8962060842981,
+        "raw_median": 1.6422593093770361,
+        "median_of_group_means": 2.873953791409813,
+        "mean_of_group_medians": 1.2060341803237609,
+        "median_of_group_geometric_means": 1.7908964759171635
+      }
+    },
+    {
+      "seed": 4,
+      "true_distinct": 19953,
+      "estimates": {
+        "raw_mean": 181440.0,
+        "raw_median": 16384.0,
+        "median_of_group_means": 60928.0,
+        "mean_of_group_medians": 23552.0,
+        "median_of_group_geometric_means": 30048.388487730666
+      },
+      "ratios": {
+        "raw_mean": 9.093369418132612,
+        "raw_median": 0.8211296546885181,
+        "median_of_group_means": 3.053575903372926,
+        "mean_of_group_medians": 1.1803738786147446,
+        "median_of_group_geometric_means": 1.5059584266892532
+      }
+    }
+  ],
+  "task1_bloom": {
+    "predicted": 0.008604676553283444,
+    "measured": 0.0084
+  },
+  "task3": {
+    "fp": 1719,
+    "rate": 0.008595,
+    "fn": 0,
+    "n_insert": 8000,
+    "n_query": 200000,
+    "k_opt_ideal": 6.931471805599453,
+    "k_used": 7,
+    "ideal_floor": 0.008192549468178961,
+    "ideal_k7": 0.008193722065862417,
+    "payload_bits": 79160,
+    "actual_prediction": 0.008621707872845977,
+    "retained_bits": 80000,
+    "object_bytes": 40,
+    "state_allocation_bytes": 9960,
+    "seed_bytes": 8,
+    "baseline_bytearray_allocation_bytes": 80057
+  }
+}

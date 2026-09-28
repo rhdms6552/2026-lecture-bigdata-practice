@@ -1,0 +1,63 @@
+{
+  "runs": [
+    {
+      "n": 100000,
+      "true_distinct": 36702,
+      "exact_s": 1.1339699999953154,
+      "exact_peak_bytes": 4219244,
+      "fm_estimate": 40693.196786023924,
+      "fm_s": 14.962626400010777,
+      "fm_peak_bytes": 14630,
+      "fm_ratio": 1.1087460298082918
+    },
+    {
+      "n": 400000,
+      "true_distinct": 146970,
+      "exact_s": 8.402858700006618,
+      "exact_peak_bytes": 12767092,
+      "fm_estimate": 240387.10790184533,
+      "fm_s": 41.90489510000043,
+      "fm_peak_bytes": 14630,
+      "fm_ratio": 1.6356202483625593
+    },
+    {
+      "n": 1600000,
+      "true_distinct": 587625,
+      "exact_s": 24.326194599998416,
+      "exact_peak_bytes": 51348630,
+      "fm_estimate": 710019.9321924496,
+      "fm_s": 154.8037611000036,
+      "fm_peak_bytes": 14631,
+      "fm_ratio": 1.2082874829907673
+    },
+    {
+      "n": 6400000,
+      "true_distinct": 2349909,
+      "exact_s": 36.22642700000142,
+      "exact_peak_bytes": 207086882,
+      "fm_estimate": 2493948.0796421864,
+      "fm_s": 366.0002011000033,
+      "fm_peak_bytes": 14640,
+      "fm_ratio": 1.0612955989539112
+    }
+  ],
+  "machine": {
+    "platform": "Windows-10-10.0.26200-SP0",
+    "processor": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "python": "3.11.8",
+    "background_apps": [
+      "chrome",
+      "codex"
+    ],
+    "cpu": "12th Gen Intel(R) Core(TM) i7-1260P",
+    "ram_bytes": 16787636224
+  },
+  "method": {
+    "seed": 246,
+    "distinct_ratio": 0.4,
+    "n_hashes": 64,
+    "combination": "median of geometric means of eight groups of eight",
+    "memory": "tracemalloc peak, including stream generation",
+    "time": "wall time with tracemalloc enabled"
+  }
+}

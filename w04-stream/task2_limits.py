@@ -13,7 +13,7 @@ record where your laptop stops coping.
 
 Your numbers will not match anybody else's. That is the point.
 """
-import argparse, json, os, platform, time, tracemalloc
+import argparse, json, os, platform, subprocess, time, tracemalloc
 
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -21,9 +21,19 @@ OUT = os.path.join(HERE, "out")
 
 
 def machine():
-    return {"platform": platform.platform(),
+    info = {"platform": platform.platform(),
             "processor": platform.processor() or platform.machine(),
             "python": platform.python_version()}
+    if platform.system() == "Windows":
+        command = ("$cpu=(Get-CimInstance Win32_Processor).Name; "
+                   "$ram=(Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory; "
+                   "$apps=@(Get-Process | Where-Object {$_.ProcessName -in "
+                   "@('chrome','msedge','codex','Teams','ms-teams')} | "
+                   "Select-Object -ExpandProperty ProcessName -Unique); "
+                   "@{cpu=$cpu;ram_bytes=$ram;background_apps=$apps} | ConvertTo-Json -Compress")
+        info.update(json.loads(subprocess.check_output(
+            ["powershell", "-NoProfile", "-Command", command], text=True)))
+    return info
 
 
 def stream(n, distinct_ratio=0.4, seed=246):
@@ -59,9 +69,23 @@ def main():
     except Exception:
         flajolet_martin = None
 
-    rows = []
+    path = os.path.join(OUT, "limits.json")
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as f:
+            prior = json.load(f)
+    else:
+        prior = {"runs": []}
+    prior["machine"] = machine()
+    prior["method"] = {"seed": 246, "distinct_ratio": 0.4, "n_hashes": 64,
+                       "combination": "median of geometric means of eight groups of eight",
+                       "memory": "tracemalloc peak, including stream generation",
+                       "time": "wall time with tracemalloc enabled"}
     for n in [int(x) for x in a.sizes.split(",")]:
+        if n <= 0:
+            raise ValueError("stream sizes must be positive")
+        print(f"  starting exact n={n:,}", flush=True)
         true, t_exact, m_exact = exact_distinct(n)
+        print(f"  exact completed: {t_exact:.2f}s, {m_exact / 2**20:.2f} MiB; starting FM", flush=True)
         row = {"n": n, "true_distinct": true, "exact_s": t_exact,
                "exact_peak_bytes": m_exact}
 
@@ -79,19 +103,17 @@ def main():
             except NotImplementedError:
                 tracemalloc.stop()
 
-        rows.append(row)
+        prior["runs"].append(row)
+        # Save every completed size before trying a larger one.
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(prior, f, indent=2)
         line = (f"  n={n:>10,}  distinct {true:>9,}   exact {t_exact:>7.2f}s "
                 f"{m_exact / 1e6:>8.1f} MB")
         if "fm_s" in row:
             line += (f"   |  fm {row['fm_s']:>7.2f}s {row['fm_peak_bytes'] / 1e6:>6.2f} MB"
                      f"  {row['fm_ratio']:.2f}x")
-        print(line)
+        print(line, flush=True)
 
-    path = os.path.join(OUT, "limits.json")
-    prior = json.load(open(path)) if os.path.exists(path) else {"runs": []}
-    prior["machine"] = machine()
-    prior["runs"].extend(rows)
-    json.dump(prior, open(path, "w"), indent=2)
     print(f"\n  -> out/limits.json  ({len(prior['runs'])} measurement(s))")
     print("  Keep raising --sizes until the exact version is unbearable. "
           "Record where, and what ran out.")

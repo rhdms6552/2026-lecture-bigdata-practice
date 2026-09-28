@@ -18,6 +18,8 @@ better score by occasionally forgetting something it was given has not improved
 anything, it has broken the contract.
 """
 import hashlib
+import struct
+import sys
 
 
 class NaiveFilter:
@@ -64,14 +66,36 @@ class YourFilter:
     observation.md asks.
     """
 
+    __slots__ = ("_state",)
+
     def __init__(self, n_bits, seed=246):
-        raise NotImplementedError("write your filter")
+        # k = round((80,000 / 8,000) * ln(2)) = 7. The benchmark's
+        # published load is ten budget bits per inserted item.
+        # Retained state includes this slotted object, the bytearray header,
+        # its allocation, and an eight-byte seed key. No item cache is kept.
+        overhead = sys.getsizeof(self) + sys.getsizeof(bytearray(1)) - 1
+        size = n_bits // 8 - overhead
+        if size <= 8:
+            raise ValueError("budget too small for filter object and seed")
+        self._state = bytearray(size)
+        self._state[:8] = hashlib.sha256(str(seed).encode()).digest()[:8]
+        if self.memory_bits() > n_bits:
+            raise ValueError("actual Python allocation exceeds budget")
+
+    def _indices(self, item):
+        m = (len(self._state) - 8) * 8
+        digest = hashlib.blake2b(str(item).encode(), digest_size=28,
+                                 key=self._state[:8]).digest()
+        for value in struct.unpack("<7I", digest):
+            yield value % m
 
     def add(self, item):
-        raise NotImplementedError
+        for index in self._indices(item):
+            self._state[8 + index // 8] |= 1 << (index % 8)
 
     def __contains__(self, item):
-        raise NotImplementedError
+        return all(self._state[8 + index // 8] & (1 << (index % 8))
+                   for index in self._indices(item))
 
     def memory_bits(self):
-        raise NotImplementedError
+        return 8 * (sys.getsizeof(self) + sys.getsizeof(self._state))

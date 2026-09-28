@@ -13,7 +13,7 @@ approximating.
 
     python3 task1_sketches.py --verify
 """
-import argparse, random
+import argparse, hashlib, math, random, statistics, struct
 
 
 class BloomFilter:
@@ -28,13 +28,24 @@ class BloomFilter:
     """
 
     def __init__(self, m, k, seed=246):
-        raise NotImplementedError("write the Bloom filter")
+        if m <= 0 or k <= 0:
+            raise ValueError("m and k must be positive")
+        self.m, self.k = m, k
+        self.key = hashlib.sha256(str(seed).encode()).digest()
+        self.bits = bytearray((m + 7) // 8)
+
+    def _indices(self, item):
+        digest = hashlib.shake_256(self.key + str(item).encode()).digest(8 * self.k)
+        for value in struct.unpack("<" + "Q" * self.k, digest):
+            yield value % self.m
 
     def add(self, item):
-        raise NotImplementedError
+        for index in self._indices(item):
+            self.bits[index // 8] |= 1 << (index % 8)
 
     def __contains__(self, item):
-        raise NotImplementedError
+        return all(self.bits[index // 8] & (1 << (index % 8))
+                   for index in self._indices(item))
 
     def expected_fp_rate(self, n_inserted):
         """The textbook's predicted false-positive rate after n insertions.
@@ -42,7 +53,9 @@ class BloomFilter:
         §4.4.2 derives it. Return the number, do not measure it - the harness
         measures separately and compares the two.
         """
-        raise NotImplementedError
+        if n_inserted < 0:
+            raise ValueError("insert count cannot be negative")
+        return (1 - math.exp(-self.k * n_inserted / self.m)) ** self.k
 
 
 def flajolet_martin(stream, n_hashes=64, seed=246):
@@ -67,7 +80,59 @@ def flajolet_martin(stream, n_hashes=64, seed=246):
 
     Return your estimate as a float.
     """
-    raise NotImplementedError("write Flajolet-Martin")
+    maxima, nonempty = fm_registers(stream, n_hashes, seed)
+    if not nonempty:
+        return 0.0
+    return fm_combinations(maxima)["median_of_group_geometric_means"]
+
+
+def fm_registers(stream, n_hashes=64, seed=246):
+    """Keep only one trailing-zero maximum per hash, never the input items.
+
+    SHAKE's disjoint 64-bit output chunks provide reproducible hash lanes.
+    Masks let us skip counting zeros unless a register can improve.
+    """
+    if n_hashes <= 0:
+        raise ValueError("n_hashes must be positive")
+    key = hashlib.sha256(str(seed).encode()).digest()
+    unpack = struct.Struct("<" + "Q" * n_hashes).unpack
+    maxima = [0] * n_hashes
+    masks = [1] * n_hashes
+    # Check all lanes for a possible improvement with a wide-integer zero
+    # test. Unpack/update registers only when needed. This gives exactly the
+    # same maxima as examining every lane of every digest individually.
+    low_bits = sum(1 << (64 * i) for i in range(n_hashes))
+    high_bits = low_bits << 63
+    packed_mask = low_bits
+    nonempty = False
+    for item in stream:
+        nonempty = True
+        digest = hashlib.shake_256(key + str(item).encode()).digest(8 * n_hashes)
+        masked = int.from_bytes(digest, "little") & packed_mask
+        if not ((masked - low_bits) & ~masked & high_bits):
+            continue
+        for i, value in enumerate(unpack(digest)):
+            if value & masks[i] == 0:
+                zeros = (value & -value).bit_length() - 1 if value else 64
+                maxima[i] = zeros
+                masks[i] = (1 << min(zeros + 1, 64)) - 1
+        packed_mask = sum(mask << (64 * i) for i, mask in enumerate(masks))
+    return maxima, nonempty
+
+
+def fm_combinations(maxima):
+    """Compare rules on the SAME registers; grouping limits outlier influence."""
+    estimates = [float(2 ** r) for r in maxima]
+    groups = [estimates[i:i + 8] for i in range(0, len(estimates), 8)]
+    log_groups = [maxima[i:i + 8] for i in range(0, len(maxima), 8)]
+    return {
+        "raw_mean": statistics.mean(estimates),
+        "raw_median": statistics.median(estimates),
+        "median_of_group_means": statistics.median(statistics.mean(g) for g in groups),
+        "mean_of_group_medians": statistics.mean(statistics.median(g) for g in groups),
+        "median_of_group_geometric_means": 2.0 ** statistics.median(
+            statistics.mean(g) for g in log_groups),
+    }
 
 
 def reservoir_sample(stream, k, seed=246):
@@ -78,7 +143,18 @@ def reservoir_sample(stream, k, seed=246):
 
     Return a list of k items (or fewer if the stream was shorter).
     """
-    raise NotImplementedError("write reservoir sampling")
+    if k < 0:
+        raise ValueError("sample size cannot be negative")
+    rng = random.Random(seed)
+    sample = []
+    for i, item in enumerate(stream):
+        if i < k:
+            sample.append(item)
+        else:
+            j = rng.randrange(i + 1)
+            if j < k:
+                sample[j] = item
+    return sample
 
 
 # ------------------------------------------------------------------- harness
