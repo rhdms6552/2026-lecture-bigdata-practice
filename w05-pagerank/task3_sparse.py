@@ -86,10 +86,42 @@ class YourPageRank:
     """
 
     def __init__(self, beta=0.85, tol=1e-10, max_iter=100):
-        raise NotImplementedError("write your PageRank")
+        import math
+        if not 0 <= beta <= 1 or not math.isfinite(tol) or tol <= 0 or max_iter < 0:
+            raise ValueError("invalid PageRank parameters")
+        self.beta, self.tol, self.max_iter = beta, tol, max_iter
+        self._n = 0
+        self.iterations = 0
 
     def run(self, graph):
-        raise NotImplementedError
+        nodes = list(graph)
+        n = self._n = len(nodes)
+        self.iterations = 0
+        if not n:
+            return {}
+        index = {v: i for i, v in enumerate(nodes)}
+        outgoing = [[index[w] for w in graph[v]] for v in nodes]
+        degrees = [len(outs) for outs in outgoing]
+        dangling = [i for i, degree in enumerate(degrees) if not degree]
+        r = [1.0 / n] * n
+        beta = self.beta
+        for step in range(1, self.max_iter + 1):
+            base = ((1 - beta) + beta * sum(r[i] for i in dangling)) / n
+            nr = [base] * n
+            for i, outs in enumerate(outgoing):
+                if outs:
+                    share = beta * r[i] / degrees[i]
+                    for j in outs:
+                        nr[j] += share
+            delta = sum(abs(a - b) for a, b in zip(nr, r))
+            r = nr
+            self.iterations = step
+            if delta < self.tol:
+                break
+        return dict(zip(nodes, r))
 
     def memory_floats(self):
-        raise NotImplementedError
+        # Conservative peak bound: two rank vectors and <=12 scalar/temporary
+        # float slots (parameters, base, share, delta and arithmetic). Integer
+        # adjacency entries and indices take O(n+E) space, but are not floats.
+        return 2 * self._n + 12

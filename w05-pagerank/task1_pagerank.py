@@ -13,6 +13,7 @@ broken version first so you can see each failure, then fix it.
     python3 task1_pagerank.py --verify
 """
 import argparse
+import math
 
 # A: -> B, C      B: -> C      C: -> A
 SIMPLE = {"A": ["B", "C"], "B": ["C"], "C": ["A"]}
@@ -41,7 +42,37 @@ def pagerank(graph, beta=0.85, iterations=100, tol=1e-10):
     you should call it converged. Return the ranks, and set `pagerank.iterations`
     to how many you actually used, because Task 2 measures that.
     """
-    raise NotImplementedError("implement PageRank")
+    if not 0 <= beta <= 1 or not math.isfinite(tol) or tol <= 0:
+        raise ValueError("beta must be in [0, 1] and tol must be positive and finite")
+    if iterations < 0:
+        raise ValueError("iterations must be nonnegative")
+    if any(w not in graph for outs in graph.values() for w in outs):
+        raise ValueError("every destination must be a graph key")
+    pagerank.iterations = 0
+    pagerank.delta = 0.0 if not graph else float("inf")
+    pagerank.converged = not graph
+    n = len(graph)
+    if not n:
+        return {}
+    ranks = dict.fromkeys(graph, 1.0 / n)
+    dangling = [v for v, outs in graph.items() if not outs]
+    for step in range(1, iterations + 1):
+        # A dangling surfer chooses uniformly; teleport also chooses uniformly.
+        base = ((1 - beta) + beta * sum(ranks[v] for v in dangling)) / n
+        updated = dict.fromkeys(graph, base)
+        for v, outs in graph.items():
+            if outs:
+                share = beta * ranks[v] / len(outs)
+                for w in outs:
+                    updated[w] += share
+        delta = sum(abs(updated[v] - ranks[v]) for v in graph)
+        ranks = updated
+        pagerank.iterations = step
+        pagerank.delta = delta
+        if delta < tol:
+            pagerank.converged = True
+            break
+    return ranks
 
 
 def pagerank_no_teleport(graph, iterations=100):
@@ -50,7 +81,19 @@ def pagerank_no_teleport(graph, iterations=100):
     It exists so you can watch both failures happen rather than take them on
     trust. The harness checks that it really does fail.
     """
-    raise NotImplementedError("implement the broken version")
+    if not graph:
+        return {}
+    ranks = dict.fromkeys(graph, 1.0 / len(graph))
+    for _ in range(iterations):
+        updated = dict.fromkeys(graph, 0.0)
+        for v, outs in graph.items():
+            if outs:
+                share = ranks[v] / len(outs)
+                for w in outs:
+                    updated[w] += share
+        # Deliberately discard dangling mass and provide no escape from traps.
+        ranks = updated
+    return ranks
 
 
 # ------------------------------------------------------------------- harness

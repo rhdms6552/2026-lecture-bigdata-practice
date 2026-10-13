@@ -1,0 +1,13 @@
+{
+  "nodes": 200000,
+  "edges": 1018041,
+  "build_seconds": 0.7345580999972299,
+  "solve_seconds": 2.270221400016453,
+  "iterations": 20,
+  "rank_sum": 1.0000000000039038,
+  "fixed_point_l1_residual": 1.663158311429342e-11,
+  "float_slots_bound": 400012,
+  "dense_float_slots": 40000000000,
+  "dense_float64_bytes": 320000000000,
+  "note": "Dense size is calculated, not allocated; float-slot counts are not process RSS. Residual validation uses additional memory after the timed solver run."
+}
