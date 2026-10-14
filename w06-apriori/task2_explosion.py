@@ -34,7 +34,9 @@ def main():
     from task3_pcy import PlainApriori
     baskets = bench.build()
 
-    rows = []
+    path = os.path.join(OUT, "explosion.json")
+    prior = json.load(open(path)) if os.path.exists(path) else {"runs": []}
+    prior["machine"] = machine()
     for support in [int(x) for x in a.supports.split(",")]:
         algo = PlainApriori(support)
         tracemalloc.start()
@@ -47,16 +49,15 @@ def main():
         row = {"support": support, "frequent_pairs": len(pairs),
                "peak_counters": algo.peak_counters, "seconds": elapsed,
                "peak_bytes": peak_bytes}
-        rows.append(row)
+        row.update(baskets=bench.BASKETS, items=bench.ITEMS)
+        prior["runs"].append(row)
+        with open(path, "w", encoding="utf-8") as output:
+            json.dump(prior, output, indent=2)
         print(f"  support {support:>5}   pairs {len(pairs):>7,}   "
               f"counters {algo.peak_counters:>10,}   "
-              f"{elapsed:>7.2f}s   {peak_bytes / 1e6:>8.1f} MB")
+              f"{elapsed:>7.2f}s   {peak_bytes / 1e6:>8.1f} MB", flush=True)
+        del pairs  # do not retain one threshold's answers during the next run
 
-    path = os.path.join(OUT, "explosion.json")
-    prior = json.load(open(path)) if os.path.exists(path) else {"runs": []}
-    prior["machine"] = machine()
-    prior["runs"].extend(rows)
-    json.dump(prior, open(path, "w"), indent=2)
     print(f"\n  -> out/explosion.json  ({len(prior['runs'])} run(s))")
     print("  Keep halving the support until it is unbearable. Record where.")
 

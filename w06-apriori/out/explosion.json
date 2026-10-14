@@ -1,0 +1,167 @@
+{
+  "runs": [
+    {
+      "support": 400,
+      "frequent_pairs": 249,
+      "peak_counters": 10585,
+      "seconds": 1.077147199999672,
+      "peak_bytes": 1060310,
+      "baskets": 20000,
+      "items": 2000
+    },
+    {
+      "support": 200,
+      "frequent_pairs": 776,
+      "peak_counters": 58626,
+      "seconds": 2.0167096000004676,
+      "peak_bytes": 6385676,
+      "baskets": 20000,
+      "items": 2000
+    },
+    {
+      "support": 100,
+      "frequent_pairs": 2244,
+      "peak_counters": 273701,
+      "seconds": 3.112111399999776,
+      "peak_bytes": 26530220,
+      "baskets": 20000,
+      "items": 2000
+    },
+    {
+      "support": 50,
+      "frequent_pairs": 6397,
+      "peak_counters": 820259,
+      "seconds": 5.548348500000429,
+      "peak_bytes": 102424748,
+      "baskets": 20000,
+      "items": 2000
+    },
+    {
+      "support": 25,
+      "frequent_pairs": 17045,
+      "peak_counters": 893456,
+      "seconds": 6.0805122000001575,
+      "peak_bytes": 102171324,
+      "baskets": 20000,
+      "items": 2000
+    },
+    {
+      "support": 12,
+      "frequent_pairs": 43116,
+      "peak_counters": 893456,
+      "seconds": 6.001812500000597,
+      "peak_bytes": 102718876,
+      "baskets": 20000,
+      "items": 2000
+    },
+    {
+      "support": 6,
+      "frequent_pairs": 101938,
+      "peak_counters": 893456,
+      "seconds": 8.009249299999283,
+      "peak_bytes": 119356700,
+      "baskets": 20000,
+      "items": 2000
+    },
+    {
+      "support": 3,
+      "frequent_pairs": 250054,
+      "peak_counters": 893456,
+      "seconds": 8.610885100000814,
+      "peak_bytes": 156592644,
+      "baskets": 20000,
+      "items": 2000
+    },
+    {
+      "support": 1,
+      "frequent_pairs": 893456,
+      "peak_counters": 893456,
+      "seconds": 9.309413399998448,
+      "peak_bytes": 327024644,
+      "baskets": 20000,
+      "items": 2000
+    }
+  ],
+  "machine": {
+    "platform": "Windows-10-10.0.26200-SP0",
+    "processor": "Intel64 Family 6 Model 154 Stepping 3, GenuineIntel",
+    "python": "3.11.8",
+    "cpu_model": "12th Gen Intel(R) Core(TM) i7-1260P",
+    "usable_ram_gib": 15.63470458984375,
+    "available_ram_gib": 4.7984466552734375,
+    "captured_at": "2026-10-14T15:20:15.3542166+09:00",
+    "other_processes": [
+      "ChatGPT",
+      "Memory Compression",
+      "MsMpEng",
+      "chrome",
+      "explorer"
+    ]
+  },
+  "stress_probe": {
+    "build_seconds": 13.78040190000138,
+    "method": "Same seed and unmodified bench.build with a larger item universe and basket count. Exact Apriori pair counting with a budget check every 128 baskets; input baskets are built before tracing. Incomplete runs have no final frequent-pair answer.",
+    "runs": [
+      {
+        "support": 200,
+        "items": 10000,
+        "baskets": 80000,
+        "processed_baskets": 80000,
+        "frequent_singletons": 1194,
+        "candidate_counters": 574201,
+        "seconds": 11.345257499999207,
+        "peak_bytes": 53596063,
+        "completed": true,
+        "stop_reason": null,
+        "frequent_pairs": 2214,
+        "memory_limit_bytes": 536870912,
+        "seconds_limit": 60
+      },
+      {
+        "support": 100,
+        "items": 10000,
+        "baskets": 80000,
+        "processed_baskets": 80000,
+        "frequent_singletons": 2885,
+        "candidate_counters": 1901132,
+        "seconds": 17.917872500000158,
+        "peak_bytes": 204731660,
+        "completed": true,
+        "stop_reason": null,
+        "frequent_pairs": 6137,
+        "memory_limit_bytes": 536870912,
+        "seconds_limit": 60
+      },
+      {
+        "support": 50,
+        "items": 10000,
+        "baskets": 80000,
+        "processed_baskets": 80000,
+        "frequent_singletons": 6879,
+        "candidate_counters": 4671325,
+        "seconds": 32.55606599999919,
+        "peak_bytes": 430151084,
+        "completed": true,
+        "stop_reason": null,
+        "frequent_pairs": 16739,
+        "memory_limit_bytes": 536870912,
+        "seconds_limit": 60
+      },
+      {
+        "support": 25,
+        "items": 10000,
+        "baskets": 80000,
+        "processed_baskets": 66560,
+        "frequent_singletons": 9977,
+        "candidate_counters": 5597801,
+        "seconds": 39.27956979999908,
+        "peak_bytes": 817264180,
+        "completed": false,
+        "stop_reason": "memory_budget",
+        "frequent_pairs": null,
+        "memory_limit_bytes": 536870912,
+        "seconds_limit": 60
+      }
+    ]
+  }
+}

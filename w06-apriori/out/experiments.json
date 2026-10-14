@@ -1,0 +1,200 @@
+{
+  "rules": {
+    "top": [
+      1468,
+      0,
+      0.8387096774193549,
+      1.2824306994179737
+    ],
+    "reverse": [
+      0,
+      1468,
+      0.003975535168195718,
+      1.2824306994179737
+    ],
+    "antecedent_support": 62,
+    "consequent_support": 13080,
+    "baskets": 20000,
+    "frequent_singletons": 1849,
+    "all_possible_pairs": 1999000,
+    "surviving_possible_pairs": 1708476
+  },
+  "memory_comparison": [
+    {
+      "baskets": 100,
+      "plain": {
+        "baskets": 100,
+        "support": 50,
+        "seconds": 0.002250700001241057,
+        "peak_bytes": 56160,
+        "pair_counters": 0,
+        "answers": 0
+      },
+      "pcy": {
+        "baskets": 100,
+        "support": 50,
+        "seconds": 1.7564051000008476,
+        "peak_bytes": 1276828,
+        "pair_counters": 0,
+        "answers": 0,
+        "buckets": 1048576,
+        "bucket_bytes": 1048576,
+        "bitmap_bytes": 131072,
+        "frequent_buckets": 0
+      }
+    },
+    {
+      "baskets": 500,
+      "plain": {
+        "baskets": 500,
+        "support": 50,
+        "seconds": 0.011761699999624398,
+        "peak_bytes": 111448,
+        "pair_counters": 136,
+        "answers": 12
+      },
+      "pcy": {
+        "baskets": 500,
+        "support": 50,
+        "seconds": 2.152039499998864,
+        "peak_bytes": 1384969,
+        "pair_counters": 12,
+        "answers": 12,
+        "buckets": 1048576,
+        "bucket_bytes": 1048576,
+        "bitmap_bytes": 131072,
+        "frequent_buckets": 12
+      }
+    },
+    {
+      "baskets": 1000,
+      "plain": {
+        "baskets": 1000,
+        "support": 50,
+        "seconds": 0.04128069999933359,
+        "peak_bytes": 191092,
+        "pair_counters": 1078,
+        "answers": 59
+      },
+      "pcy": {
+        "baskets": 1000,
+        "support": 50,
+        "seconds": 2.4799222000001464,
+        "peak_bytes": 1405257,
+        "pair_counters": 59,
+        "answers": 59,
+        "buckets": 1048576,
+        "bucket_bytes": 1048576,
+        "bitmap_bytes": 131072,
+        "frequent_buckets": 59
+      }
+    },
+    {
+      "baskets": 2000,
+      "plain": {
+        "baskets": 2000,
+        "support": 50,
+        "seconds": 0.12892470000042522,
+        "peak_bytes": 834100,
+        "pair_counters": 6228,
+        "answers": 179
+      },
+      "pcy": {
+        "baskets": 2000,
+        "support": 50,
+        "seconds": 3.161625400000048,
+        "peak_bytes": 1437845,
+        "pair_counters": 182,
+        "answers": 179,
+        "buckets": 1048576,
+        "bucket_bytes": 1048576,
+        "bitmap_bytes": 131072,
+        "frequent_buckets": 182
+      }
+    },
+    {
+      "baskets": 5000,
+      "plain": {
+        "baskets": 5000,
+        "support": 50,
+        "seconds": 0.6513386999995419,
+        "peak_bytes": 6493788,
+        "pair_counters": 50168,
+        "answers": 823
+      },
+      "pcy": {
+        "baskets": 5000,
+        "support": 50,
+        "seconds": 6.355410100000881,
+        "peak_bytes": 1519825,
+        "pair_counters": 903,
+        "answers": 823,
+        "buckets": 1048576,
+        "bucket_bytes": 1048576,
+        "bitmap_bytes": 131072,
+        "frequent_buckets": 849
+      }
+    },
+    {
+      "baskets": 20000,
+      "plain": {
+        "baskets": 20000,
+        "support": 50,
+        "seconds": 7.2133689999991475,
+        "peak_bytes": 102567716,
+        "pair_counters": 820259,
+        "answers": 6397
+      },
+      "pcy": {
+        "baskets": 20000,
+        "support": 50,
+        "seconds": 34.35471449999932,
+        "peak_bytes": 3965725,
+        "pair_counters": 13109,
+        "answers": 6397,
+        "buckets": 1048576,
+        "bucket_bytes": 1048576,
+        "bitmap_bytes": 131072,
+        "frequent_buckets": 6972
+      }
+    }
+  ],
+  "bucket_comparison": [
+    {
+      "baskets": 20000,
+      "support": 50,
+      "seconds": 34.35471449999932,
+      "peak_bytes": 3965725,
+      "pair_counters": 13109,
+      "answers": 6397,
+      "buckets": 1048576,
+      "bucket_bytes": 1048576,
+      "bitmap_bytes": 131072,
+      "frequent_buckets": 6972
+    },
+    {
+      "baskets": 20000,
+      "support": 50,
+      "seconds": 39.219102699998984,
+      "peak_bytes": 30109757,
+      "pair_counters": 305445,
+      "answers": 6397,
+      "buckets": 65536,
+      "bucket_bytes": 65536,
+      "bitmap_bytes": 8192,
+      "frequent_buckets": 21468
+    },
+    {
+      "baskets": 20000,
+      "support": 50,
+      "seconds": 50.488579999999274,
+      "peak_bytes": 102889933,
+      "pair_counters": 820259,
+      "answers": 6397,
+      "buckets": 4096,
+      "bucket_bytes": 4096,
+      "bitmap_bytes": 512,
+      "frequent_buckets": 4096
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "build_seconds": 13.78040190000138,
+  "method": "Same seed and unmodified bench.build with a larger item universe and basket count. Exact Apriori pair counting with a budget check every 128 baskets; input baskets are built before tracing. Incomplete runs have no final frequent-pair answer.",
+  "runs": [
+    {
+      "support": 200,
+      "items": 10000,
+      "baskets": 80000,
+      "processed_baskets": 80000,
+      "frequent_singletons": 1194,
+      "candidate_counters": 574201,
+      "seconds": 11.345257499999207,
+      "peak_bytes": 53596063,
+      "completed": true,
+      "stop_reason": null,
+      "frequent_pairs": 2214,
+      "memory_limit_bytes": 536870912,
+      "seconds_limit": 60
+    },
+    {
+      "support": 100,
+      "items": 10000,
+      "baskets": 80000,
+      "processed_baskets": 80000,
+      "frequent_singletons": 2885,
+      "candidate_counters": 1901132,
+      "seconds": 17.917872500000158,
+      "peak_bytes": 204731660,
+      "completed": true,
+      "stop_reason": null,
+      "frequent_pairs": 6137,
+      "memory_limit_bytes": 536870912,
+      "seconds_limit": 60
+    },
+    {
+      "support": 50,
+      "items": 10000,
+      "baskets": 80000,
+      "processed_baskets": 80000,
+      "frequent_singletons": 6879,
+      "candidate_counters": 4671325,
+      "seconds": 32.55606599999919,
+      "peak_bytes": 430151084,
+      "completed": true,
+      "stop_reason": null,
+      "frequent_pairs": 16739,
+      "memory_limit_bytes": 536870912,
+      "seconds_limit": 60
+    },
+    {
+      "support": 25,
+      "items": 10000,
+      "baskets": 80000,
+      "processed_baskets": 66560,
+      "frequent_singletons": 9977,
+      "candidate_counters": 5597801,
+      "seconds": 39.27956979999908,
+      "peak_bytes": 817264180,
+      "completed": false,
+      "stop_reason": "memory_budget",
+      "frequent_pairs": null,
+      "memory_limit_bytes": 536870912,
+      "seconds_limit": 60
+    }
+  ]
+}
