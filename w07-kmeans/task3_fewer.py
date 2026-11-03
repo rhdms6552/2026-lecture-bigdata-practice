@@ -81,7 +81,42 @@ class YourKMeans:
     """
 
     def __init__(self, k, max_iter=50):
-        raise NotImplementedError("write your k-means")
+        self.k, self.max_iter = k, max_iter
 
     def run(self, points, initial_centroids, distance):
-        raise NotImplementedError
+        centroids = list(initial_centroids)
+        labels = [None] * len(points)
+        upper = [float("inf")] * len(points)  # distance to assigned centre, at most
+        lower = [0.0] * len(points)           # distance to any rival, at least
+        tol = 1e-12                          # same tie rule as NaiveKMeans
+        for self.iterations in range(1, self.max_iter + 1):
+            changed = False
+            for i, p in enumerate(points):
+                old = labels[i]
+                if old is not None:
+                    if upper[i] + tol < lower[i]:
+                        continue
+                    upper[i] = distance(p, centroids[old])
+                    if upper[i] + tol < lower[i]:
+                        continue
+                # Not proved: check all rivals, reusing the distance just measured.
+                ds = [upper[i] if j == old else distance(p, c)
+                      for j, c in enumerate(centroids)]
+                best = 0
+                for j in range(1, self.k):
+                    if ds[j] < ds[best] - tol:
+                        best = j
+                labels[i], upper[i] = best, ds[best]
+                lower[i] = min((d for j, d in enumerate(ds) if j != best),
+                               default=float("inf"))
+                changed |= best != old
+            if not changed:
+                break
+            moved = _means(points, labels, self.k, centroids)
+            shifts = [distance(a, b) for a, b in zip(centroids, moved)]
+            largest = max(shifts)
+            for i, label in enumerate(labels):
+                upper[i] += shifts[label]
+                lower[i] -= largest
+            centroids = moved
+        return labels, centroids
